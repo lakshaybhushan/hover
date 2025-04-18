@@ -57,6 +57,35 @@ export default function AdvancedHoverText({
   // Throttled mouse move handler
   const lastUpdateTime = useRef(0);
 
+  // Shared logic for updating weights based on a point (x, y)
+  const updateWeightsAtPoint = useCallback(
+    (x: number, y: number) => {
+      if (
+        !containerRef.current ||
+        !isInitialized ||
+        letterPositions.length === 0
+      )
+        return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const pointX = x - containerRect.left;
+      const pointY = y - containerRect.top;
+      const newWeights = letterPositions.map((pos) => {
+        const distance = Math.sqrt(
+          Math.pow(pointX - pos.x, 2) + Math.pow(pointY - pos.y, 2)
+        );
+        if (distance > influenceRadius) return minWeight;
+        const weightRange = maxWeight - minWeight;
+        const falloff = Math.pow(
+          1 - Math.min(distance / influenceRadius, 1),
+          2
+        );
+        return Math.round(minWeight + falloff * weightRange);
+      });
+      setLetterWeights(newWeights);
+    },
+    [isInitialized, letterPositions, minWeight, maxWeight, influenceRadius]
+  );
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (
@@ -71,31 +100,8 @@ export default function AdvancedHoverText({
       if (now - lastUpdateTime.current < 16) return;
       lastUpdateTime.current = now;
 
-      // Get container position
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const mouseX = e.clientX - containerRect.left;
-      const mouseY = e.clientY - containerRect.top;
-
-      // Calculate new weights based on cached positions
-      const newWeights = letterPositions.map((pos, index) => {
-        // Calculate distance from mouse to letter center
-        const distance = Math.sqrt(
-          Math.pow(mouseX - pos.x, 2) + Math.pow(mouseY - pos.y, 2)
-        );
-
-        // Calculate weight based on distance (closer = heavier)
-        if (distance > influenceRadius) return minWeight;
-
-        const weightRange = maxWeight - minWeight;
-        // Use a smoother falloff curve
-        const falloff = Math.pow(
-          1 - Math.min(distance / influenceRadius, 1),
-          2
-        );
-        return Math.round(minWeight + falloff * weightRange);
-      });
-
-      setLetterWeights(newWeights);
+      // Use shared logic
+      updateWeightsAtPoint(e.clientX, e.clientY);
     },
     [isInitialized, letterPositions, minWeight, maxWeight, influenceRadius]
   );
@@ -105,12 +111,41 @@ export default function AdvancedHoverText({
     setLetterWeights(Array(text.length).fill(minWeight));
   }, [text.length, minWeight]);
 
+  // Touch support
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateWeightsAtPoint(touch.clientX, touch.clientY);
+      }
+    },
+    [updateWeightsAtPoint]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateWeightsAtPoint(touch.clientX, touch.clientY);
+      }
+    },
+    [updateWeightsAtPoint]
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    setLetterWeights(Array(text.length).fill(minWeight));
+  }, [text.length, minWeight]);
+
   return (
     <div
       ref={containerRef}
       className={`inline-block cursor-default ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {text.split("").map((letter, index) => (
         <motion.span

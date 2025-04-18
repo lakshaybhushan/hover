@@ -2,6 +2,7 @@ import type React from "react";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 // Load Geist as a variable font
 const geist = Geist({
@@ -23,6 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Analytics />
       <body className={geist.className}>{children}</body>
     </html>
   );

@@ -5,7 +5,7 @@ import { FaGithub } from "react-icons/fa6";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col p-4 bg-white gap-8 items-center">
+    <main className="min-h-screen flex flex-col p-4 bg-white items-center w-full gap-8">
       <header className="flex items-center justify-end w-full">
         <Link href="https://github.com/lakshaybhushan/hover">
           <Button>
@@ -13,7 +13,7 @@ export default function Home() {
           </Button>
         </Link>
       </header>
-      <div className="flex flex-col items-center justify-center gap-2 w-full">
+      <div className="flex flex-col items-center justify-center gap-2 w-full md:mt-20 mt-10">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tighter">
           hover.
         </h1>
