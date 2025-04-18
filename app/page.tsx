@@ -17,21 +17,21 @@ export default function Home() {
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tighter">
           hover.
         </h1>
-        <p className="text-gray-500 text-sm sm:text-base">
+        <p className="text-neutral-500 text-sm sm:text-base">
           A buttery smooth text hover effect
         </p>
       </div>
-      <div className="bg-gray-100 rounded-lg p-4 sm:p-6 md:p-8 min-h-[240px] sm:min-h-[320px] md:min-h-[400px] w-full max-w-xs sm:max-w-md md:max-w-xl flex items-center justify-center border border-gray-200">
+      <div className="bg-neutral-100 rounded-lg p-4 sm:p-6 md:p-8 min-h-[240px] sm:min-h-[320px] md:min-h-[400px] w-full max-w-xs sm:max-w-md md:max-w-xl flex items-center justify-center border border-neutral-200">
         <AdvancedHoverText
           text="You can just ship things..."
           minWeight={200}
           maxWeight={900}
         />
       </div>
-      <footer className="text-center text-gray-600 fixed bottom-4 left-0 w-full pt-4 text-xs sm:text-sm md:text-base border-t border-gray-200">
+      <footer className="text-center text-neutral-600 fixed bottom-4 left-0 w-full pt-4 text-xs sm:text-sm md:text-base border-t border-neutral-200">
         Made with{" "}
         <Link href="https://v0.dev" target="_blank" rel="noopener noreferrer">
-          <span className="underline underline-offset-4 hover:text-gray-900">
+          <span className="underline underline-offset-4 hover:text-neutral-900">
             v0.dev
           </span>
         </Link>{" "}
@@ -41,7 +41,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span className="underline underline-offset-4 hover:text-gray-900">
+          <span className="underline underline-offset-4 hover:text-neutral-900">
             Lakshay Bhushan
           </span>
           :)
